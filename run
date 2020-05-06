@@ -15,7 +15,7 @@ touch display/Xauthority
 DISPLAY_NUMBER=$(echo $DISPLAY | cut -d. -f1 | cut -d: -f2)
 
 # Extract current authentication cookie
-AUTH_COOKIE=$(xauth list | grep "^$(hostname):${DISPLAY_NUMBER} " | awk '{print $3}')
+AUTH_COOKIE=$(xauth list ${DISPLAY} | awk '{print $3}')
 
 # Create the new X Authority file
 xauth -f display/Xauthority add ${CONTAINER_HOSTNAME}/unix:${CONTAINER_DISPLAY} MIT-MAGIC-COOKIE-1 ${AUTH_COOKIE}
