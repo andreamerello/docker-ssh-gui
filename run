@@ -1,5 +1,4 @@
 #!/bin/bash
-
 #https://blog.yadutaf.fr/2017/09/10/running-a-graphical-app-in-a-docker-container-on-a-remote-server/
 
 # Prepare target env
@@ -18,14 +17,14 @@ DISPLAY_NUMBER=$(echo $DISPLAY | cut -d. -f1 | cut -d: -f2)
 AUTH_COOKIE=$(xauth list ${DISPLAY} | awk '{print $3}')
 
 # Create the new X Authority file
-xauth -f display/Xauthority add ${CONTAINER_HOSTNAME}/unix:${CONTAINER_DISPLAY} MIT-MAGIC-COOKIE-1 ${AUTH_COOKIE}
+xauth -f display/Xauthority add 172.17.0.1:${DISPLAY_NUMBER} MIT-MAGIC-COOKIE-1 ${AUTH_COOKIE}
 
 # Proxy with the :0 DISPLAY
-socat TCP4:localhost:60${DISPLAY_NUMBER} UNIX-LISTEN:display/socket/X${CONTAINER_DISPLAY} &
+#socat TCP4:localhost:60${DISPLAY_NUMBER} UNIX-LISTEN:display/socket/X${CONTAINER_DISPLAY} &
 
 # Launch the container
 docker run -it --rm \
-  -e DISPLAY=:${CONTAINER_DISPLAY} \
+  -e DISPLAY=172.17.0.1:${DISPLAY_NUMBER} \
   -v ${PWD}/display/socket:/tmp/.X11-unix \
   -v ${PWD}/display/Xauthority:/home/${CONTAINER_HOME}/.Xauthority \
   --hostname ${CONTAINER_HOSTNAME} \
