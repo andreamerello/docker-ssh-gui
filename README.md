@@ -1,6 +1,8 @@
 Tunnelling X (GUI) in Docker + SSH
 ================================
 
+**NOTE**: today I discovered that *xpra* makes all this basically unneeded (and it's faster and it allow for detaching/reattaching)..
+
 
 Docker + X (locally)
 --------------------
